@@ -1,16 +1,13 @@
 #include "Shannon-Fano.h"
-using namespace std;
 
-// =============================
-// SHANNON–FANO COMPRESSION
-// =============================
+
 struct SFNode {
     char ch;
     int freq;
-    string code;
+    std::string code;
 };
 
-void shannonFanoBuild(vector<SFNode*> &a, int l, int r) {
+void shannonFanoBuild(std::vector<SFNode*> &a, int l, int r) {
     if (l >= r) return;
     int total = 0;
     for (int i = l; i <= r; i++) total += a[i]->freq;
@@ -31,38 +28,38 @@ void shannonFanoBuild(vector<SFNode*> &a, int l, int r) {
     shannonFanoBuild(a, split + 1, r);
 }
 
-map<char,string> shannonFanoEncode(const string &text) {
-    vector<SFNode> table(256);
+std::map<char, std::string> shannonFanoEncode(const std::string &text) {
+    std::vector<SFNode> table(256);
     for (int i = 0; i < 256; i++) { table[i].ch = i; table[i].freq = 0; }
     for (char c : text) table[(unsigned char)c].freq++;
 
-    vector<SFNode*> symbols;
+    std::vector<SFNode*> symbols;
     for (auto &x : table) if (x.freq > 0) symbols.push_back(&x);
 
     sort(symbols.begin(), symbols.end(), [&](SFNode* a, SFNode* b){return a->freq > b->freq;});
 
     shannonFanoBuild(symbols, 0, symbols.size() - 1);
 
-    map<char,string> codes;
-    cout << "Shannon-Fano table:\n";
+    std::map<char, std::string> codes;
+    std::cout << "Shannon-Fano table:\n";
     for (auto s : symbols) {
-        cout << s->ch << " freq=" << s->freq << " code=" << s->code << "\n";
+        std::cout << s->ch << " freq=" << s->freq << " code=" << s->code << "\n";
         codes[s->ch] = s->code;
     }
     return codes;
 }
 
-string shannonFanoCompress(const string &text, map<char,string> &codes) {
-    string out;
+std::string shannonFanoCompress(const std::string &text, std::map<char, std::string> &codes) {
+    std::string out;
     for (char c : text) out += codes[c];
     return out;
 }
 
-string shannonFanoDecode(const string &bin, map<char,string> &codes) {
-    map<string,char> back;
+std::string shannonFanoDecode(const std::string &bin, std::map<char, std::string> &codes) {
+    std::map<std::string, char> back;
     for (auto &p : codes) back[p.second] = p.first;
 
-    string cur, out;
+    std::string cur, out;
     for (char b : bin) {
         cur.push_back(b);
         if (back.count(cur)) {

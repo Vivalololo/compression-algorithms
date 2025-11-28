@@ -1,10 +1,6 @@
 #include "Huffman.h"
 
-using namespace std;
 
-// =============================
-// HUFFMAN COMPRESSION
-// =============================
 struct HuffNode {
     char ch;
     int freq;
@@ -18,7 +14,7 @@ struct Compare {
     }
 };
 
-void huffmanBuildCodes(HuffNode *root, string path, map<char,string> &codes) {
+void huffmanBuildCodes(HuffNode *root, std::string path, std::map<char, std::string> &codes) {
     if (!root) return;
     if (!root->left && !root->right) {
         codes[root->ch] = path;
@@ -28,11 +24,11 @@ void huffmanBuildCodes(HuffNode *root, string path, map<char,string> &codes) {
     huffmanBuildCodes(root->right, path + "1", codes);
 }
 
-map<char,string> huffmanEncode(const string &text) {
-    map<char,int> freq;
+std::map<char, std::string> huffmanEncode(const std::string &text) {
+    std::map<char,int> freq;
     for (char c : text) freq[c]++;
 
-    priority_queue<HuffNode*, vector<HuffNode*>, Compare> pq;
+    std::priority_queue<HuffNode*, std::vector<HuffNode*>, Compare> pq;
     for (auto &p : freq) pq.push(new HuffNode(p.first, p.second));
 
     while (pq.size() > 1) {
@@ -45,27 +41,27 @@ map<char,string> huffmanEncode(const string &text) {
     }
 
     HuffNode *root = pq.top();
-    map<char,string> codes;
+    std::map<char, std::string> codes;
     huffmanBuildCodes(root, "", codes);
 
-    cout << "Huffman table:\n";
+    std::cout << "Huffman table:\n";
     for (auto &p : freq)
-        cout << p.first << " freq=" << p.second << " code=" << codes[p.first] << "\n";
+        std::cout << p.first << " freq=" << p.second << " code=" << codes[p.first] << "\n";
 
     return codes;
 }
 
-string huffmanCompress(const string &text, map<char,string> &codes) {
-    string out;
+std::string huffmanCompress(const std::string &text, std::map<char, std::string> &codes) {
+    std::string out;
     for (char c : text) out += codes[c];
     return out;
 }
 
-string huffmanDecode(const string &bin, map<char,string> &codes) {
-    map<string,char> back;
+std::string huffmanDecode(const std::string &bin, std::map<char, std::string> &codes) {
+    std::map<std::string, char> back;
     for (auto &p : codes) back[p.second] = p.first;
 
-    string cur, out;
+    std::string cur, out;
     for (char b : bin) {
         cur.push_back(b);
         if (back.count(cur)) {
