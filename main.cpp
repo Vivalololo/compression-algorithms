@@ -6,7 +6,7 @@ using namespace std;
 
 
 int main() {
-    string text = "hello world";
+    string text = "hello world!";
 
     cout << "===== SHANNON–FANO =====\n";
     auto sfCodes = shannonFanoEncode(text);
