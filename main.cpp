@@ -1,6 +1,7 @@
 #include "src/Huffman.h"
 #include "src/Shannon-Fano.h"
 #include "src/LZ77.h"
+#include "src/LZ78.h"
 #include <iostream>
 
 
@@ -26,11 +27,22 @@ int main() {
     std::cout << "Encoded:\t" << encoded << "\n";
     std::string dec = lz77_decompress_binary(encoded);
     std::cout << "Decoded:\t" << dec << "\n";
-
     if (data == dec)
-        std::cout << "OK: matches!\n";
+        std::cout << "OK: matches!\n\n";
     else
-        std::cout << "ERROR: mismatch!\n";
+        std::cout << "ERROR: mismatch!\n\n";
+
+    
+    std::cout << "===== LZ78 =====\n";
+    std::string text2 = "ABABABAABABAABBBBCCCCCXYZXYZ";
+    auto compressed = lz78_compress(text);
+    auto decompressed = lz78_decompress(compressed);
+    std::cout << "Original:   " << text << "\n";
+    std::cout << "Decoded:    " << decompressed << "\n\n";
+    std::cout << "Tokens:\n";
+    for (auto& t : compressed)
+        std::cout << "(" << t.index << ", '" << t.nextChar << "')\n";
+
 
     return 0;
 }

@@ -12,5 +12,7 @@ add_executable(Compress
     src/Shannon-Fano.cpp
     src/LZ77.h
     src/LZ77.cpp
+    src/LZ78.h
+    src/LZ78.cpp
 )
 
